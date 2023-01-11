@@ -1,0 +1,31 @@
+service: awscronoservice-demo
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  iamRoleStatements:
+    - Effect: Allow
+      Action: 
+        - ses:* 
+      Resource: '*'
+
+# Los argumentos específicos en esta expresión son:
+
+# Minutos: */2 significa cada 2 minutos, ya que el asterisco (*) representa cualquier valor posible.
+# Horas: * significa cualquier valor, ya que se desea que la función se ejecute cada 2 minutos, independientemente de la hora.
+# Día del mes: * significa cualquier valor, ya que se desea que la función se ejecute cada 2 minutos, independientemente del día del mes.
+# Mes: * significa cualquier valor, ya que se desea que la función se ejecute cada 2 minutos, independientemente del mes.
+# Día de la semana: ? especifica que el día de la semana no importa, para el caso.
+# Año: * significa cualquier valor, ya que se desea que la función se ejecute cada 2 minutos, independientemente del año.
+# Ten en cuenta que debido a la frecuencia de ejecución y el potencial de alto costo de utilizar esta configuración.
+functions:
+  ApiDailyFunction:
+    handler: lambdas/apiDayly.handler
+    events: 
+      - schedule: cron(*/2 * * * ? *)
+  repeatEmailFunction:
+    handler: lambdas/repeatEmail.handler
+    events: 
+      - schedule: cron(*/5 * * * ? *)
